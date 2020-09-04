@@ -40,4 +40,17 @@ class HSMControllerMockkTest(@Autowired private val webTestClient: WebTestClient
 
         verify { lunaHSMService.status(any()) }
     }
+
+    @Test
+    fun shouldPassToo() {
+        every { lunaHSMService.status(any()) } returns "bar"
+        webTestClient.get()
+                .uri("/status?hsm=LUNA")
+                .exchange()
+                .expectStatus().isOk
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("bar")
+
+        verify { lunaHSMService.status(any()) }
+    }
 }

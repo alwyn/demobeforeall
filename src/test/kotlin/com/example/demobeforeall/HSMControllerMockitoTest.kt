@@ -42,4 +42,17 @@ class HSMControllerMockitoTest(@Autowired private val webTestClient: WebTestClie
 
         verify(lunaHSMService).status(StatusRequest(HSMProvider.LUNA))
     }
+
+    @Test
+    fun shouldPassToo() {
+        `when`(lunaHSMService.status(StatusRequest(HSMProvider.LUNA))).thenReturn("bar")
+        webTestClient.get()
+                .uri("/status?hsm=LUNA")
+                .exchange()
+                .expectStatus().isOk
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("bar")
+
+        verify(lunaHSMService).status(StatusRequest(HSMProvider.LUNA))
+    }
 }
